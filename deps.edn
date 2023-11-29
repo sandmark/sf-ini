@@ -16,6 +16,8 @@
 
  :tasks
  {:init   (defn env [s] (System/getenv s))
+  merge   {:requires ([sf-ini.core :as ini])
+           :task     (ini/-main)}
   uberjar (shell "clj -T:build uberjar")
   native  {:depends [uberjar]
            :task    (shell (format "%s/bin/native-image --features=clj_easy.graal_build_time.InitClojureClasses --no-fallback -jar target/sf_ini.jar target/sf_ini" (env "GRAALVM_HOME")))}}}
