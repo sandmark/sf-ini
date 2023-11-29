@@ -1,0 +1,21 @@
+{:paths ["src" "resources"]
+ :deps  {org.clojure/clojure                  {:mvn/version "1.11.1"}
+         com.github.clj-easy/graal-build-time {:mvn/version "1.0.5"}
+         com.taoensso/timbre                  {:mvn/version "6.3.1"}
+         io.github.sandmark/clojure-ini       {:git/sha "56a9628c4cc309b3217998bc03072d08b46cc488"}}
+
+ :aliases
+ {:dev {:extra-paths ["dev/src" "dev/resources" "test/src" "test/resources" "spec/src"]
+        :extra-deps  {nubank/matcher-combinators  {:mvn/version "3.8.8"}
+                      org.clojure/tools.namespace {:mvn/version "1.4.4"}
+                      orchestra/orchestra         {:mvn/version "2021.01.01-1"}}}
+
+  :build {:deps
+          {io.github.clojure/tools.build {:mvn/version "0.9.6"}}
+          :ns-default build}}
+
+ :tasks
+ {:init   (defn env [s] (System/getenv s))
+  uberjar (shell "clj -T:build uberjar")
+  native  {:depends [uberjar]
+           :task    (shell (format "%s/bin/native-image --features=clj_easy.graal_build_time.InitClojureClasses --no-fallback -jar target/sf_ini.jar target/sf_ini" (env "GRAALVM_HOME")))}}}
