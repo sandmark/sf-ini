@@ -61,7 +61,7 @@
           (doseq [section (keys section-map)]
             (.write f (format "[%s]\n" section))
             (doseq [[k {:keys [:source :value]}] (get section-map section)]
-              (when (< 1 (count value))
+              (when (set? source)
                 (log/warnf "Conflict: '[%s]->%s' defined with different values on %s"
                            section k source))
               (.write f (str k "="))
